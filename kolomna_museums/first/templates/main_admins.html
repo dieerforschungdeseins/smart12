@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href=""><b>Расписание</b></a>
+        <a class="navbar-brand" href="/all_museums">Оформление билета</a>
+        <a class="navbar-brand" href="/museum_info">О музеях</a>
+    </nav>
+
+    <div class="timeline">
+        <div class="day">
+            <h2>Понедельник, 17 июня 2024 г.</h2>
+            <div class="event">
+                <h3>Исторический центр</h3>
+                <p>Время: 10:00 - 12:00</p>
+                <p>Цена: 300₽</p>
+                <p>Взрослых: 5</p>
+                <p>Детей: 5</p>
+                <button class="book-button">Отменить</button>
+            </div>
+            <div class="event">
+                <h3>Музей искусств</h3>
+                <p>Время: 13:00 - 15:00</p>
+                <p>Цена: 300₽</p>
+                <p>Взрослых: 5</p>
+                <p>Детей: 5</p>
+                <button class="book-button">Отменить</button>
+            </div>
+            <div class="event">
+                <h3>Прогулка по парку</h3>
+                <p>Время: 16:00 - 18:00</p>
+                <p>Цена: 300₽</p>
+                <p>Взрослых: 5</p>
+                <p>Детей: 5</p>
+                <button class="book-button">Отменить</button>
+            </div>
+        </div>
+
+        <div class="day">
+            <h2>Вторник, 18 июня 2024 г.</h2>
+            <div class="event">
+                <h3>Природные достопримечательности</h3>
+                <p>Время: 09:00 - 12:00</p>
+                <p>Цена: 300₽</p>
+                <p>Взрослых: 5</p>
+                <p>Детей: 5</p>
+                <button class="book-button">Отменить</button>
+            </div>
+            <div class="event">
+                <h3>Экскурсия 6</h3>
+                <p>Время: 13:00 - 15:00</p>
+                <p>Цена: 300₽</p>
+                <p>Взрослых: 5</p>
+                <p>Детей: 5</p>
+                <button class="book-button">Отменить</button>
+            </div>
+            <div class="event">
+                <h3>Экскурсия 5</h3>
+                <p>Время: 16:00 - 18:00</p>
+                <p>Цена: 300₽</p>
+                <p>Взрослых: 5</p>
+                <p>Детей: 5</p>
+                <button class="book-button">Отменить</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        body{
+            font-family: "Times New Roman";
+            font-size: 15px;
+        }
+
+        .container{
+          border-radius: 15px;
+          background-color: Snow;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          margin-top: 15px;
+          padding-top: 15px;
+          padding-bottom: 15px;
+          padding-right: 15px;
+          padding-left: 15px;
+        }
+
+        #one_ticket{
+          margin-top:20px;
+          background-color: #8eaa95;
+          text-align: center;
+        }
+
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .day {
+            position: relative;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        .day::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            top: 50%;
+            left: -5px;
+            transform: translateY(-50%);
+        }
+        .event {
+            margin-left: 20px;
+            padding-left: 10px;
+            border-left: 2px solid #242c35;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .book-button {
+            position: absolute;
+            top: 0;
+            right: -120px;
+            padding: 8px 16px;
+            background-color: #965d5d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+</body>
+
+</html>

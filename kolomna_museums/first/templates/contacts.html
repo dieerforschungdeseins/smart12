@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    {% load static %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="../">Музеи Коломны</a>
+        <a class="navbar-brand" href="/basket">Ваша корзина</a>
+        <a class="navbar-brand" href="/timetable_client">Расписание</a>
+        <a class="navbar-brand" href=""><b>Контакты</b></a>
+    </nav>
+
+    <div class="container">
+        <div class="logo">
+            <img src="{% static "emblema.jpg" %}" alt="Эмблема Коломенского Посада">
+        </div>
+        <h1>Контакты Коломенского Посада</h1>
+        <p>Адрес: ул. Кремлевская, 2, г. Коломна, Россия</p>
+        <p>Телефон: 8 (800) 350-7908</p>
+        <p>Email: info@kolomnaposad.ru</p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+        body{
+            font-family: "Times New Roman";
+            font-size: 15px;
+        }
+
+        .container{
+          border-radius: 15px;
+          background-color: Snow;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          margin-top: 15px;
+          padding-top: 15px;
+          padding-bottom: 15px;
+          padding-right: 15px;
+          padding-left: 15px;
+        }
+        .logo{
+          text-align: center;
+        }
+    </style>
+
+</body>
+
+</html>
