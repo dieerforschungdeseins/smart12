@@ -20,16 +20,18 @@
     <div class="timeline">
         {% for i in lst %}
         <div class="day">
-            <h3>{{ i[0] }}</h3>
+            <h3>{{ i.day }}</h3>
+            {% for j in i.value %}
             <div class="event">
-                <h4>{{ i[1] }}</h4>
-                <p>Начало: {{ i[2] }}:{{ i[3] }} </p>
-                <p>Продолжительность: {{ i[4] }} часа</p>
-                <p>Цена: {{ i[5] }}₽</p>
+                <h4>{{ j.name }}</h4>
+                <p>Начало: {{ j.time }} </p>
+                <p>Продолжительность: {{ j.capacity }} часа</p>
+                <p>Цена: {{ j.price }}₽</p>
                 <form action="/one_reserv">
                     <button class="book-button">Забронировать</button>
                 </form>
             </div>
+            {% endfor %}
         </div>
         {% endfor %}
         </div>

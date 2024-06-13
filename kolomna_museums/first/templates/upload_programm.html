@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новое место</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+                body {
+                    background-color: #ffff;
+                    margin: 0;
+                    padding: 0;
+                    font-family: "Times New Roman";
+                    font-size: 15px;
+                }
+
+                a {
+                    margin: 10px;
+                    text-decoration: none;
+                    color: #fff;
+                }
+
+                a:hover {
+                    color: #5faaa5;
+
+                }
+
+                nav {
+                    background-color: #333;
+                    position: relative;
+                    height: 70px;
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .button-exit{
+                    width: 100%;
+                    padding: 5px;
+                    background-color: #5faaa5;
+                    color: #fff;
+                    border: none;
+                    border-radius: 3px;
+                    cursor: pointer;
+                }
+
+                .title{
+                    font-family: Andale Mono, monospace;
+                    font-size: 30px;
+                    text-align: center;
+                }
+                .text_field{
+                    position: relative;
+                    width: 60%;
+                    height: 25px;
+                    left: 20%;
+                    font-size: 20px;
+                }
+
+                .upload {
+                    position: relative;
+                    height: 25px;
+                    left: 35%;
+                    font-size: 16px;
+                }
+
+                .upload_button {
+                    position: relative;
+                    height: 25px;
+                    left: 45%;
+                    font-size: 20px;
+                    cursor: pointer;
+                }
+
+                .space{
+                    position: relative;
+                    height: 20px;
+                }
+
+                .button-exit:hover{
+                    background-color: #4f81b3;
+                }
+
+                .private_div {
+                    position: relative;
+                    display: flex;
+                    left: 35%;
+                }
+
+                .private_tittle {
+                    width: 180px;
+                    font-size: 30px;
+                    margin: 2px;
+                }
+
+                .private_box {
+                    width: 20px;
+                    height: 20px;
+                    margin: 10px;
+                }
+
+                .title_main {
+                    font-family: Andale Mono, monospace;
+                    font-size: 30px;
+                    text-align: center;
+                    position: relative;
+                    top: 10vh;
+                }
+                .container{
+                  border-radius: 15px;
+                  background-color: Snow;
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                  margin-top: 15px;
+                  padding-top: 15px;
+                  padding-bottom: 15px;
+                  padding-right: 15px;
+                  padding-left: 15px;
+                  position: absolute;
+                  left: 20%;
+                  top: 20vh;
+                  width: 60%;
+                }
+
+            </style>
+</head>
+<body>
+    <div class="window_info">
+        <h2 class="title_main">Загрузить место</h2>
+        <div class="container">
+            <form method="post">
+                {% csrf_token %}
+                <select name="private_hidden" hidden><option value="0" id="private_hidden_id">I hate privates!</option></select>
+
+                <div class="title">Название мероприятия</div>
+                <input class="text_field" type="text" name="name" placeholder="обязательно" required /><br />
+                <div class="space"></div>
+
+                <div class="title">Название места, к которому это мероприятие привязано</div>
+                <input class="text_field" type="text" name="place" placeholder="обязательно" required /><br />
+                <div class="space"></div>
+
+                <div class="title">Продолжительность</div>
+                <input class="text_field" type="text" id="length" name="length" placeholder="в часах" required/><br />
+                <div class="space"></div>
+
+                <div class="title">Старт</div>
+                <input class="text_field" type="text" id="start" name="start" placeholder="Укажите в формате часы:минуты ДЕНЬ.МЕСЯЦ" required/><br />
+                <div class="space"></div>
+
+                <div class="title">Частота</div>
+                <input class="text_field" type="text" id="periodicity" name="periodicity" placeholder="в часах" required/><br />
+                <div class="space"></div>
+
+
+                <div class="title">Вместимость </div>
+                <input class="text_field" type="text" id="capacity" name="capacity" placeholder="" required/><br />
+                <div class="space"></div>
+
+                <div class="title">Цена за взрослый билет </div>
+                <input class="text_field" type="text" id="price_adult" name="price_adult" placeholder="в рублях" required/><br />
+                <div class="space"></div>
+
+                <div class="title">Цена за детский билет </div>
+                <input class="text_field" type="text" id="price_children" name="price_children" placeholder="в рублях" required/><br />
+                <div class="space"></div>
+
+                <div class="title">Цена за льготный билет </div>
+                <input class="text_field" type="text" id="price_invalid" name="price_invalid" placeholder="в рублях" required/><br />
+                <div class="space"></div>
+
+                <div class="title">Цена за взрослый билет во время выходных/праздников </div>
+                <input class="text_field" type="text" id="discount_price_adult" name="discount_price_adult" placeholder="в рублях" required/><br />
+                <div class="space"></div>
+
+                <div class="title">Цена за детский билет во время выходных/праздников </div>
+                <input class="text_field" type="text" id="discount_price_children" name="discount_price_children" placeholder="в рублях" required/><br />
+                <div class="space"></div>
+
+                <div class="title">Цена за льготный билет во время выходных/праздников </div>
+                <input class="text_field" type="text" id="discount_price_invalid" name="discount_price_invalid" placeholder="в рублях" required/><br />
+                <div class="space"></div>
+
+
+                <button class="upload_button" type="submit">Загрузить</button>
+            </form>
+            <div>
+                {% if success == 1 %}'
+                    <h4>Программа была успешно загружена!</h4>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -17,68 +17,30 @@
     <a class="navbar-brand" href="/contacts">Контакты</a>
     </nav>
 
-    <div class="timeline">
-        <div class="day">
-            <h3>Понедельник, 17 июня 2024 г.</h3>
-            <div class="event">
-                <h4>Исторический центр</h4>
-                <p>Время: 10:00 - 12:00</p>
-                <div class="card-footer">
-                    <input type="checkbox" id="excursion1" name="excursion2" value="Кремль">
-                    <label for="excursion2">Выбрать эту экскурсию</label>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="timeline">
+            {% for i in lst %}
+            <div class="day">
+                <h3>{{ i.day }}</h3>
+                {% for j in i.value %}
+                <div class="event">
+                    <h4>{{ j.name }}</h4>
+                    <p>Начало: {{ j.time }} </p>
+                    <p>Продолжительность: {{ j.capacity }} часа</p>
+                    <p>Цена: {{ j.price }}₽</p>
+                    <label for="{{ j.name }}">Выбрать эту экскурсию</label>
+                    <input type="checkbox" id="{{ j.name }}" name="{{ j.name }}" value="{{ j.name }}">
+
                 </div>
+                {% endfor %}
             </div>
-            <div class="event">
-                <h4>Музей искусств</h4>
-                <p>Время: 13:00 - 15:00</p>
-                <div class="card-footer">
-                    <input type="checkbox" id="excursion2" name="excursion2" value="Кремль">
-                    <label for="excursion2">Выбрать эту экскурсию</label>
-                </div>
+            {% endfor %}
             </div>
-            <div class="event">
-                <h4>Прогулка по парку</h4>
-                <p>Время: 16:00 - 18:00</p>
-                <div class="card-footer">
-                    <input type="checkbox" id="excursion3" name="excursion2" value="Кремль">
-                    <label for="excursion2">Выбрать эту экскурсию</label>
-                </div>
-            </div>
+
         </div>
 
-        <div class="day">
-            <h3>Вторник, 18 июня 2024 г.</h3>
-            <div class="event">
-                <h4>Природные достопримечательности</h4>
-                <p>Время: 09:00 - 12:00</p>
-                <div class="card-footer">
-                    <input type="checkbox" id="excursion4" name="excursion2" value="Кремль">
-                    <label for="excursion2">Выбрать эту экскурсию</label>
-                </div>
-            </div>
-            <div class="event">
-                <h4>Водопады и каньоны</h4>
-                <p>Время: 13:00 - 15:00</p>
-                <div class="card-footer">
-                    <input type="checkbox" id="excursion5" name="excursion2" value="Кремль">
-                    <label for="excursion2">Выбрать эту экскурсию</label>
-                </div>
-            </div>
-            <div class="event">
-                <h4>Экскурсия на лодке</h4>
-                <p>Время: 16:00 - 18:00</p>
-                <div class="card-footer">
-                    <input type="checkbox" id="excursion6" name="excursion2" value="Кремль">
-                    <label for="excursion2">Выбрать эту экскурсию</label>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <form id="one_ticket" action="/one_reserv">
-        <button class="btn" >Сформировать программу</button>
+        <button class="btn" type="submit" >Сформировать программу</button>
     </form>
 
 

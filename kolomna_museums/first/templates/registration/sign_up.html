@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>sing up</title>
+        <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 20px;
+                    background-color: #f0f0f0;
+                    margin: 0;
+                    padding: 0;
+                    height: 100%;
+                }
+
+                .main-container {
+                    display: flex;
+                }
+
+                .login-container {
+                    max-height: 400px;
+                    width: 500px;
+                    padding: 20px;
+                    margin: 230px auto;
+                    background-color: #fff;
+                    border-radius: 5px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    position: relative;
+                }
+
+                h2 {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+
+                label {
+                    display: flex;
+                    margin-bottom: 10px;
+                }
+
+                input {
+                    width: 94%;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 3px;
+                }
+
+                button {
+                    width: 100%;
+                    padding: 10px;
+                    background-color: #5faaa5;
+                    color: #fff;
+                    border: none;
+                    border-radius: 3px;
+                    cursor: pointer;
+                }
+
+                button:hover {
+                    background-color: #4f81b3;
+                }
+
+                .info-container{
+                    background-color: #fff;
+                    border-radius: 5px;
+                    position: absolute;
+                    padding: 20px;
+                    top: 230px;
+                    left: 200px;
+                    width: 400px;
+                    height: 230px;
+                    opacity: 0;
+                    transition: opacity 0.5s;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+
+                .info-label{
+                    color: #5faaa5;
+                    text-decoration: underline;
+                }
+
+                .info-label:hover{
+                    color: #4f81b3;
+                }
+        </style>
+
+    </head>
+
+    <body>
+        <main>
+            <div class="main-container">
+                <div class="login-container">
+                    <h2>Регистрация</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <label>Имя пользователя</label>
+                        {{ form.username }}
+                        <label>Пароль</label>
+                        {{ form.password1 }}
+                        <label>Подтверждение пароля</label>
+                        {{ form.password2 }}
+                        <input class="text_field" type="text" id="gmail" name="gmail" placeholder="Почта" required/><br />
+                        <input class="text_field" type="text" id="telephone" name="telephone" placeholder="Телефон" required/><br />
+
+                        <button type="submit">Принять</button>
+                        <label class="info-label">Требования к паролю</label>
+                        {{error}}
+                    </form>
+                </div>
+            </div>
+
+            <div class="info-container">
+                <label>
+                    Для имени пользователя:
+                    <br>
+                    Необходимо, чтобы имя пользователя состояло из 150 символов или меньше. Только буквы, цифры и @/./+/-/_.
+                </label>
+                <br>
+                <label>
+                    Для пароля:
+                    <br>
+                    Пароль должен содержать не менее 8 символов и
+                    не может содержать только цифры.
+                </label>
+            </div>
+        </main>
+    </body>
+
+    <script>
+        var x = document.querySelector('.info-label');
+        var y =  document.querySelector('.info-container');
+        x.onmouseover = function () {
+            y.style.opacity = '1';
+        };
+        x.onmouseout = function () {
+            y.style.opacity = '0';
+        };
+    </script>
+</html>

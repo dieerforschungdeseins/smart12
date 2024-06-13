@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Новое место</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+                body {
+                    background-color: #ffff;
+                    margin: 0;
+                    padding: 0;
+                    font-family: "Times New Roman";
+                    font-size: 15px;
+                }
+
+                a {
+                    margin: 10px;
+                    text-decoration: none;
+                    color: #fff;
+                }
+
+                a:hover {
+                    color: #5faaa5;
+
+                }
+
+                nav {
+                    background-color: #333;
+                    position: relative;
+                    height: 70px;
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .button-exit{
+                    width: 100%;
+                    padding: 5px;
+                    background-color: #5faaa5;
+                    color: #fff;
+                    border: none;
+                    border-radius: 3px;
+                    cursor: pointer;
+                }
+
+                .title{
+                    font-family: Andale Mono, monospace;
+                    font-size: 30px;
+                    text-align: center;
+                }
+                .text_field{
+                    position: relative;
+                    width: 60%;
+                    height: 25px;
+                    left: 20%;
+                    font-size: 20px;
+                }
+
+                .upload {
+                    position: relative;
+                    height: 25px;
+                    left: 35%;
+                    font-size: 16px;
+                }
+
+                .upload_button {
+                    position: relative;
+                    height: 25px;
+                    left: 45%;
+                    font-size: 20px;
+                    cursor: pointer;
+                }
+
+                .space{
+                    position: relative;
+                    height: 20px;
+                }
+
+                .button-exit:hover{
+                    background-color: #4f81b3;
+                }
+
+                .private_div {
+                    position: relative;
+                    display: flex;
+                    left: 35%;
+                }
+
+                .private_tittle {
+                    width: 180px;
+                    font-size: 30px;
+                    margin: 2px;
+                }
+
+                .private_box {
+                    width: 20px;
+                    height: 20px;
+                    margin: 10px;
+                }
+
+                .title_main {
+                    font-family: Andale Mono, monospace;
+                    font-size: 30px;
+                    text-align: center;
+                    position: relative;
+                    top: 10vh;
+                }
+                .container{
+                  border-radius: 15px;
+                  background-color: Snow;
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                  margin-top: 15px;
+                  padding-top: 15px;
+                  padding-bottom: 15px;
+                  padding-right: 15px;
+                  padding-left: 15px;
+                  position: absolute;
+                  left: 20%;
+                  top: 20vh;
+                  width: 60%;
+                }
+
+            </style>
+</head>
+<body>
+    <div class="window_info">
+        <h2 class="title_main">Загрузить место</h2>
+        <div class="container">
+            <form method="post">
+                {% csrf_token %}
+                <select name="private_hidden" hidden><option value="0" id="private_hidden_id">I hate privates!</option></select>
+
+                <div class="title">Название музея/кафе/фестиваля/ярмарки</div>
+                <input class="text_field" type="text" name="name" placeholder="обязательно" required /><br />
+                <div class="space"></div>
+
+                <div class="title">Адрес</div>
+                <input class="text_field" type="text" name="place" placeholder="обязательно" required /><br />
+                <div class="space"></div>
+
+                <div class="title">Фотография места</div>
+                <input class="upload" type="file" id="image_custom" name="image_custom" accept="image/png, image/jpeg" /><br />
+                <div class="space"></div>
+
+                <div class="title">Описание</div>
+                <input class="text_field" type="text" id="description" name="description" placeholder="обязательно" required/><br />
+                <div class="space"></div>
+
+                <button class="upload_button" type="submit">Загрузить</button>
+            </form>
+            <div>
+                {% if success == 1 %}'
+                    <h4>Место было успешно загружено!</h4>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function choose_place_preview_update(){
+        global_places_counter = document.getElementsByClassName("place_element").length;
+
+        if(global_page_two){
+            image_content.innerHTML = '<input type="number" name="choose_image_input" value="1" min="1" max=' + global_places_counter + '>';
+        }
+    }
+
+
+    function custom_preview() {
+        global_page_two = false;
+
+        image_content.innerHTML = '<input type="file" id="image_custom" name="custom_image_file" accept="image/png, image/jpeg" required /> <br />';
+        choose_place_preview_update()
+    }
+
+</script>
