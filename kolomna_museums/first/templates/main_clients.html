@@ -15,26 +15,17 @@
         <a class="navbar-brand" href="/timetable_client">Расписание</a>
         <a class="navbar-brand" href="/contacts">Контакты</a>
     </nav>
-
+    {% for place in places %}
     <div class="container">
         <div class="museum">
-            <h2 class="museum-title">Музей-заповедник "Коломна"</h2>
-            <p class="museum-description">Прогуляйтесь по живописным улицам старинного города, посетите древние церкви и крепостные стены, окунитесь в мир средневековых легенд и историй.</p>
-            <form action="/museum" target="_blank">
+            <h2 class="museum-title">{{ place.name }}</h2>
+            <p class="museum-description">{{ place.description }}</p>
+            <form action="/museum/{{ place.id }}" target="_blank">
                 <button class="btn">Перейти</button>
             </form>
         </div>
     </div>
-
-    <div class="container">
-        <div class="museum">
-            <h2 class="museum-title">Музей истории меда "Берестов Хутор"</h2>
-            <p class="museum-description">Откройте для себя тайны пчеловодства и изучите процесс производства меда, поучаствуйте в увлекательных мастер-классах и лекциях.</p>
-            <form action="/museum" target="_blank">
-                <button class="btn">Перейти</button>
-            </form>
-        </div>
-    </div>
+    {% endfor %}
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

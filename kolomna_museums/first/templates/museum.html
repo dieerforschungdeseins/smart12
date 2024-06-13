@@ -5,6 +5,15 @@
     <title>Музей</title>
 </head>
 <body>
-    Доработать
+    {{ places.name }}
+    {{ places.image }}
+    {{ places.description }}
+    {% for i in programm %}
+    {{ i.name }} {{ i.length }} {{ i.day_start }} {{ i.price_adult }}
+    {% endfor %}
+    <form method="POST">
+        {% csrf_token %}
+        <button>Добавить в корзину</button>
+    </form>
 </body>
 </html>

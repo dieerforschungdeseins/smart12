@@ -15,12 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from first import views
 
 urlpatterns = [
     path('main/', admin.site.urls),
     path('', views.main_clients_page),
+    path('user/registration/', views.registration),
+    path('login/', auth_views.LoginView.as_view()),
+    path('logout/', auth_views.LogoutView.as_view()),
     path('admin/', views.main_admins_page),
     path('basket/', views.basket_page),
     path('contacts/', views.contacts_page),
@@ -28,6 +32,8 @@ urlpatterns = [
     path('timetable_client/', views.timetable_client_page),
     path('one_reserv/', views.one_reserv_page),
     path('basket_reserv/', views.basket_reserv_page),
-    path('museum/', views.museum_page),
-    path('all_museums/', views.all_museums_page)
+    path('museum/<int:id>', views.museum_page),
+    path('all_museums/', views.all_museums_page),
+    path('upload_place/', views.upload_place_page),
+    path('upload_programm/', views.upload_programm_page)
 ]

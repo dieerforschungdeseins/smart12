@@ -18,63 +18,24 @@
     </nav>
 
     <div class="timeline">
+        {% for i in lst %}
         <div class="day">
-            <h3>Понедельник, 17 июня 2024 г.</h3>
+            <h3>{{ i[0] }}</h3>
             <div class="event">
-                <h4>Исторический центр</h4>
-                <p>Время: 10:00 - 12:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
-            <div class="event">
-                <h4>Музей искусств</h4>
-                <p>Время: 13:00 - 15:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
-            <div class="event">
-                <h4>Прогулка по парку</h4>
-                <p>Время: 16:00 - 18:00</p>
-                <p>Цена: 300₽</p>
+                <h4>{{ i[1] }}</h4>
+                <p>Начало: {{ i[2] }}:{{ i[3] }} </p>
+                <p>Продолжительность: {{ i[4] }} часа</p>
+                <p>Цена: {{ i[5] }}₽</p>
                 <form action="/one_reserv">
                     <button class="book-button">Забронировать</button>
                 </form>
             </div>
         </div>
-
-        <div class="day">
-            <h3>Вторник, 18 июня 2024 г.</h3>
-            <div class="event">
-                <h4>Природные достопримечательности</h4>
-                <p>Время: 09:00 - 12:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
-            <div class="event">
-                <h4>Водопады и каньоны</h4>
-                <p>Время: 13:00 - 15:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
-            <div class="event">
-                <h4>Экскурсия на лодке</h4>
-                <p>Время: 16:00 - 18:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
+        {% endfor %}
         </div>
 
     </div>
+
 
 
     <form id="one_ticket" action="/basket_reserv">
