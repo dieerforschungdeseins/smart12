@@ -249,12 +249,127 @@ def basket_page(request):
 
     return render(request, "basket.html", context)
 
+
+
 def contacts_page(request):
     return render(request, "contacts.html")
 
 @login_required
 def main_admins_page(request):
-    return render(request, "main_admins.html")
+    programms = list(Programm.objects.filter())
+    now_weekday = datetime.now().isoweekday()
+    now_month = date.today().month
+    now_day = date.today().day
+    now_hour = datetime.now().hour + 3
+    now_minute = datetime.now().minute
+    TIMESWEEK = 168
+    days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+    months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября",
+              "декабря"]
+    lst = dict()
+    k = 0
+    for i in days[now_weekday - 1:-1]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+
+    for i in days[:now_weekday - 1]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+
+    for i in programms:
+        change_time(i)
+        if i.day_start - now_day <= 7:
+            lst[list(lst.keys())[i.day_start - now_day]].append(
+                [i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult])
+
+    for i in lst:
+        lst[i] = sorted(lst[i], key=lambda x: x[1])
+        lst[i] = sorted(lst[i], key=lambda x: x[2])
+
+    res = []
+    for i in lst:
+        pr = {
+            "day": i,
+            "value": []
+        }
+        for j in lst[i]:
+            pr["value"].append({
+                "name": j[0],
+                "time": f"{j[1]}:{j[2]}",
+                "capacity": j[3],
+                "price": j[4]
+            })
+        res.append(pr)
+    context = {
+        "lst": res
+    }
+
+    if request.method == "POST":
+        pass
+
+    return render(request, "main_admins.html", context)
 
 @login_required
 def museum_info_page(request):
