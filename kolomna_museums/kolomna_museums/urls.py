@@ -35,5 +35,6 @@ urlpatterns = [
     path('museum/<int:id>', views.museum_page),
     path('all_museums/', views.all_museums_page),
     path('upload_place/', views.upload_place_page),
-    path('upload_programm/', views.upload_programm_page)
+    path('upload_programm/', views.upload_programm_page),
+    path('map/', views.map_page)
 ]

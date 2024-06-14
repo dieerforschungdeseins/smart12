@@ -17,7 +17,7 @@ from django.http import JsonResponse
 
 # Create your views here.
 
-def registration(request):  # @antony_anton @Coldish_elf
+def registration(request):
     error = ''
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -36,6 +36,19 @@ def registration(request):  # @antony_anton @Coldish_elf
         form = UserCreationForm()
 
     return render(request, 'registration/sign_up.html', {'form': form, 'error': error})
+
+# def login
+
+def map_page(request):
+    if request.method == 'POST':
+        user_text = request.POST.get('user_text', '')
+
+    else:
+        user_text = None
+    context = {
+        "user_text": user_text
+    }
+    return render(request, 'map.html', context)
 
 def main_clients_page(request):
     places = Place.objects.filter()
