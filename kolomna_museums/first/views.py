@@ -131,6 +131,7 @@ def basket_page(request):
     fv = Favorite.objects.filter(user=user)
     places = []
     for i in fv: places.append(i.place)
+    print("PLACES: ", places)
     programms = []
     for j in places:
         for i in Programm.objects.filter(parent=j.id): programms.append(i)
@@ -213,7 +214,7 @@ def basket_page(request):
             else:
                 lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
         k += 1
-
+    print(programms)
     for i in programms:
         change_time(i)
         if i.day_start - now_day <= 7:
@@ -246,7 +247,7 @@ def basket_page(request):
         print("done")
         print(request.POST)
         return redirect('/one_revers')
-
+    print(lst)
     return render(request, "basket.html", context)
 
 
@@ -509,11 +510,24 @@ def museum_page(request, id):
     user = User.objects.get(username=request.user)
 
     if request.method == "POST":
-        record = Favorite(
-            place = places[0],
-            user=user
-        )
-        record.save()
+        fv = Favorite.objects.filter(place=places[0])
+        if len(list(fv))> 0:
+            fv = fv.filter(user=user)
+            if len(list(fv)) > 0:
+                pass
+            else:
+                record = Favorite(
+                    place = places[0],
+                    user=user
+                )
+                record.save()
+        else:
+            record = Favorite(
+                place=places[0],
+                user=user
+            )
+            record.save()
+
     return render(request, "museum.html", context)
 
 
