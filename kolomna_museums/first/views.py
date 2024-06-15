@@ -158,7 +158,9 @@ def basket_page(request):
     months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
     lst = dict()
     k = 0
-    for i in days[now_weekday - 1:-1]:
+    print(days[now_weekday-1:len(days):])
+    for i in days[now_weekday-1:len(days):]:
+        print(i)
         if now_month == 2:
             now_year = datetime.now().year
             if now_year % 4 == 0:
@@ -282,7 +284,7 @@ def main_admins_page(request):
               "декабря"]
     lst = dict()
     k = 0
-    for i in days[now_weekday - 1:-1]:
+    for i in days[now_weekday - 1:len(days)]:
         if now_month == 2:
             now_year = datetime.now().year
             if now_year % 4 == 0:
@@ -390,10 +392,207 @@ def museum_info_page(request):
     return render(request, "museum_info.html")
 
 def timetable_client_page(request):
-    return render(request, "timetable_client.html")
+    user = User.objects.get(username=request.user)
+
+    rgs = list(Registr.objects.filter(user=user))
+    print(rgs)
+    programms = []
+    for i in rgs:
+        programms.append(list(Programm.objects.filter(id=int(i.programm_id.id)))[0])
+    print(programms)
+    now_weekday = datetime.now().isoweekday()
+    now_month = date.today().month
+    now_day = date.today().day
+    now_hour = datetime.now().hour + 3
+    now_minute = datetime.now().minute
+    TIMESWEEK = 168
+    days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+    months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября",
+              "декабря"]
+    lst = dict()
+    k = 0
+    for i in days[now_weekday - 1:-1]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+
+    for i in days[:now_weekday - 1]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+
+    for i in programms:
+        change_time(i)
+        if i.day_start - now_day <= 7:
+            lst[list(lst.keys())[i.day_start - now_day]].append(
+                [i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult, i.id])
+
+    for i in lst:
+        lst[i] = sorted(lst[i], key=lambda x: x[1])
+        lst[i] = sorted(lst[i], key=lambda x: x[2])
+
+    res = []
+    for i in lst:
+        pr = {
+            "day": i,
+            "value": []
+        }
+        for j in lst[i]:
+            pr["value"].append({
+                "name": j[0],
+                "time": f"{j[1]}:{j[2]}",
+                "capacity": j[3],
+                "price": j[4],
+                "id": j[5]
+            })
+        res.append(pr)
+    context = {
+        "lst": res
+    }
+    if request.method == "POST":
+        print(request.POST)
+        return redirect('../timetable_client/')
+
+    return render(request, "timetable_client.html", context)
 
 def one_reserv_page(request):
-    return render(request, "one_reserv.html")
+    key = 0
+    programs = []
+    ids = ""
+    if request.method == 'POST' and "adults" not in request.POST:
+        key += 1
+        print("1:::::  ", request.POST)
+        selected_checkboxes = request.POST.getlist('checkbox_name')
+        print(selected_checkboxes)
+
+        if len(selected_checkboxes) == 0:
+            return redirect("/basket_reserv")
+        for checkbox in selected_checkboxes:
+            ids += f"{checkbox} "
+            pgs = Programm.objects.filter(id=checkbox)
+            for i in list(pgs):
+                if i not in programs:
+                    programs.append(i)
+        print("1")
+    context= dict()
+    names = ""
+    timetable = []
+    for i in programs:
+        names += f"{i.name}, "
+    names = names[:len(names)-2] + ":"
+    for i in programs:
+        timetable.append(f"{i.hour_start}:{i.minute_start} {i.day_start}.{i.month_start}\n")
+    context["timetable"] = timetable
+    context["names"] = names
+    context["ids"] = ids
+    red_flag = "ВСЕ ПРОВЕРЕНО"
+    for i in range(len(programs)):
+        for j in range(i+1, len(programs)):
+            if (programs[i].day_start == programs[j].day_start and programs[i].month_start == programs[j].month_start):
+                if (programs[i].hour_start > programs[j].hour_start):
+                    if ( programs[i].hour_start <= programs[j].hour_start + programs[j].length):
+                        red_flag = "ПРОБЛЕМА СО ВРЕМЕНЕМ"
+                elif (programs[j].hour_start > programs[i].hour_start):
+                    if ( programs[j].hour_start <= programs[i].hour_start + programs[i].length):
+                        red_flag = "ПРОБЛЕМА СО ВРЕМЕНЕМ"
+                elif (programs[j].hour_start == programs[i].hour_start):
+                    if (programs[i].minute_start > programs[j].minute_start):
+                        if ( programs[i].minute_start <= programs[j].minute_start + programs[j].length * 60):
+                            red_flag = "ПРОБЛЕМА СО ВРЕМЕНЕМ"
+                    elif (programs[j].minute_start > programs[i].minute_start):
+                        if ( programs[j].minute_start <= programs[i].minute_start + programs[i].minute_start * 60):
+                            red_flag = "ПРОБЛЕМА СО ВРЕМЕНЕМ"
+    user = User.objects.get(username=request.user)
+    rgs = Registr.objects.filter(user=user)
+    for i in list(rgs):
+        if i in programs:
+            if red_flag == "ВСЕ ПРОВЕРЕНО":
+                red_flag = "УЖЕ СУЩЕСТВУЮТ ЗАПИСИ НА ЭТИ ПРОГРАММЫ"
+            else:
+                red_flag += " + УЖЕ СУЩЕСТВУЮТ ЗАПИСИ НА ЭТИ ПРОГРАММЫ"
+
+    context["red_flag"] = red_flag
+    if request.method == "POST":
+        print(request.POST)
+        if "adults" in request.POST:
+            req = dict(request.POST)
+            ids = list(map(int, list(req.keys())[-1].split()))
+            programs = []
+            for i in ids:
+                programs.append(list(Programm.objects.filter(id=i))[0])
+            print("2", programs, list(req.keys())[-1])
+
+            for i in programs:
+                record = Registr(
+                    programm_id=i,
+                    user=user,
+                    adult_count = request.POST.get("adults"),
+                    children_count = request.POST.get("children"),
+                    invalid_count = request.POST.get("invalid")
+                )
+                record.save()
+            return redirect('../timetable_client/')
+    return render(request, "one_reserv.html", context)
 
 def basket_reserv_page(request):
     user = User.objects.get(username=request.user)
@@ -486,7 +685,7 @@ def basket_reserv_page(request):
     for i in programms:
         change_time(i)
         if i.day_start - now_day <= 7:
-            lst[list(lst.keys())[i.day_start - now_day]].append([i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult])
+            lst[list(lst.keys())[i.day_start - now_day]].append([i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult, i.id])
 
     for i in lst:
         lst[i] = sorted(lst[i], key=lambda x: x[1])
@@ -504,7 +703,8 @@ def basket_reserv_page(request):
                 "name": j[0],
                 "time": f"{j[1]}:{j[2]}",
                 "capacity": j[3],
-                "price": j[4]
+                "price": j[4],
+                "id": j[5]
             })
         res.append(pr)
     context = {

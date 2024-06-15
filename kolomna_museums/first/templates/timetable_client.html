@@ -16,47 +16,28 @@
     <a class="navbar-brand" href=""><b>Расписание</b></a>
     <a class="navbar-brand" href="/contacts">Контакты</a>
     </nav>
-
+    {% csrf_token %}
     <div class="timeline">
-        <div class="day">
-            <h2>Понедельник, 17 июня 2024 г.</h2>
-            <div class="event">
-                <h3>Исторический центр</h3>
-                <p>Время: 10:00 - 12:00</p>
-                <button class="book-button">Отменить</button>
-            </div>
-            <div class="event">
-                <h3>Музей искусств</h3>
-                <p>Время: 13:00 - 15:00</p>
-                <button class="book-button">Отменить</button>
-            </div>
-            <div class="event">
-                <h3>Прогулка по парку</h3>
-                <p>Время: 16:00 - 18:00</p>
-                <button class="book-button">Отменить</button>
-            </div>
-        </div>
 
+        {% for i in lst %}
         <div class="day">
-            <h2>Вторник, 18 июня 2024 г.</h2>
+            <h3>{{ i.day }}</h3>
+            {% for j in i.value %}
             <div class="event">
-                <h3>Природные достопримечательности</h3>
-                <p>Время: 09:00 - 12:00</p>
-                <button class="book-button">Отменить</button>
+                <h4>{{ j.name }}</h4>
+                <p>Начало: {{ j.time }} </p>
+                <p>Продолжительность: {{ j.capacity }} часа</p>
+                <p>Цена: {{ j.price }}₽</p>
+                <form method="POST">
+                    <button class="book-button" name="{{ j.id }}">Отменить</button>
+                </form>
             </div>
-            <div class="event">
-                <h3>Экскурсия 6</h3>
-                <p>Время: 13:00 - 15:00</p>
-                <button class="book-button">Отменить</button>
-            </div>
-            <div class="event">
-                <h3>Экскурсия 5</h3>
-                <p>Время: 16:00 - 18:00</p>
-                <button class="book-button">Отменить</button>
-            </div>
+            {% endfor %}
         </div>
-
+        {% endfor %}
     </div>
+
+
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

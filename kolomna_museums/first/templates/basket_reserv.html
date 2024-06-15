@@ -17,7 +17,7 @@
     <a class="navbar-brand" href="/contacts">Контакты</a>
     </nav>
 
-    <form method="POST">
+    <form method="POST" action="/one_reserv/">
         {% csrf_token %}
         <div class="timeline">
             {% for i in lst %}
@@ -29,8 +29,8 @@
                     <p>Начало: {{ j.time }} </p>
                     <p>Продолжительность: {{ j.capacity }} часа</p>
                     <p>Цена: {{ j.price }}₽</p>
-                    <label for="{{ j.name }}">Выбрать эту экскурсию</label>
-                    <input type="checkbox" id="{{ j.name }}" name="{{ j.name }}" value="{{ j.name }}">
+                    <label for="{{ j.id }}">Выбрать эту экскурсию</label>
+                    <input type="checkbox" id="{{ j.id }}" name="checkbox_name" value="{{ j.id }}">
 
                 </div>
                 {% endfor %}

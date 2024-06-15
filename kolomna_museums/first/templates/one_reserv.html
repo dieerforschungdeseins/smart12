@@ -63,9 +63,9 @@
     </style>
 </head>
 <body>
-    <form id="main">
-        <h3>Исторический центр</h3>
-
+    <form id="main" method="post">
+        {% csrf_token %}
+        <h4>{{ names }}</h4>
         <label for="adults"><b>Взрослые:</b></label>
         <input type="number" id="adults" name="adults" min="1" value="1">
 
@@ -79,48 +79,18 @@
         <input class="upload" type="file" name="imageFile" accept="image/png, image/jpeg" /> <br />
         <div class="space"></div>
 
-        <p>Время: Понедельник, 17 июня 10:00 - 12:00</p>
-
-        <label for="name"><b>Имя:</b></label>
-        <input type="text" id="name" name="name">
-
-        <label for="username"><b>Фамилия:</b></label>
-        <input type="text" id="username" name="username">
-
-        <label for="email"><b>Почта:</b></label>
-        <input type="email" id="email" name="email">
-
-        <label for="phone"><b>Телефон:</b></label>
-        <input type="tel" id="phone" name="phone">
-
-        <label for="price"><b>Цена:</b></label>
-        <input type="text" id="price" name="price" value="300 руб." readonly>
-
+        {% for i in timetable %}
+        {{ i }} <br>
+        {% endfor %}
+        <h5>{{ red_flag }}</h5>
         <div class="button-container">
-            <form action="/timetable_client">
-                <input type="submit" value="Оплатить">
-            </form>
+            <input type="submit" name="{{ ids }}" value="Оплатить">
 
             <form action="/basket">
                 <button id="cancel" >Отмена</button>
             </form>
         </div>
     </form>
-
-    <script>
-        document.getElementById('adults').addEventListener('input', updatePrice);
-        document.getElementById('children').addEventListener('input', updatePrice);
-        document.getElementById('invalid').addEventListener('input', updatePrice);
-
-        function updatePrice() {
-            var adults = parseInt(document.getElementById('adults').value);
-            var children = parseInt(document.getElementById('children').value);
-            var invalid = parseInt(document.getElementById('invalid').value);
-            alert(adults, children, invalid);
-            var totalPrice = adults * 300 + children * 150 + invalid 100;
-            document.getElementById('price').value = totalPrice + ' руб.';
-        }
-    </script>
 
 </body>
 </html>

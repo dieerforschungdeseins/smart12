@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Интеграция Яндекс.Карт</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=eaa6e591-581c-42c3-a201-00fb4697bfb0&lang=ru_RU" type="text/javascript"></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 400px;"></div>
+    <script>
+        ymaps.ready(function() {
+            var myMap = new ymaps.Map('map', {
+                center: [55.4988, 38.7784], // Координаты Коломенского Посада
+                zoom: 10
+            });
+
+            var myPlacemark = new ymaps.Placemark([55.4988, 38.7784], {
+                hintContent: 'Коломенский Посад',
+                balloonContent: 'Местоположение Коломенского Посада'
+            });
+
+            myMap.geoObjects.add(myPlacemark);
+        });
+    </script>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="user_text" placeholder="Введите текст" required><br>
+        <button type="submit">Отправить</button>
+    </form>
+<script src="https://api-maps.yandex.ru/2.1/?apikey=eaa6e591-581c-42c3-a201-00fb4697bfb0&lang=ru_RU" type="text/javascript"></script>
+{{ user_text }}
+</body>
+</html>
