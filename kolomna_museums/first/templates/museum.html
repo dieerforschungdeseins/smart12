@@ -3,17 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Музей</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 </head>
 <body>
-    {{ places.name }}
-    {{ places.image }}
-    {{ places.description }}
+    <h2>{{ places.name }}</h2><br>
+    {{ places.description }}<br>
+    <div class="container">
     {% for i in programm %}
-    {{ i.name }} {{ i.length }} {{ i.day_start }} {{ i.price_adult }}
-    {% endfor %}
+
+        Название: {{ i.name }}<br>
+        Продолжительность в часах: {{ i.length }}<br>
+        {{ i.hour_start }}:{{ i.minute_start }} {{ i.day_start }}.{{ i.month_start }} <br>
+        Цена: {{ i.price_adult }}<br>
+        ----------------------------------------------------------------------------------<br>
+    {% endfor %}</div>
     <form method="POST">
         {% csrf_token %}
         <button>Добавить в корзину</button>
     </form>
 </body>
 </html>
+
+<style>
+    body {
+                    background-color: #ffff;
+                    margin: 0;
+                    padding: 0;
+                    font-family: "Times New Roman";
+                    font-size: 15px;
+                }
+    .container{
+                  border-radius: 15px;
+                  background-color: Snow;
+                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                  margin-top: 15px;
+                  padding-top: 15px;
+                  padding-bottom: 15px;
+                  padding-right: 15px;
+                  padding-left: 15px;
+                  position: absolute;
+                  left: 20%;
+                  top: 20vh;
+                  width: 60%;
+                }
+</style>

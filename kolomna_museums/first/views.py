@@ -981,6 +981,7 @@ def museum_page(request, id):
         "places": places[0]
     }
     programms = list(Programm.objects.filter(parent=id))
+    print(programms)
     context["programm"] = programms
     user = User.objects.get(username=request.user)
 
