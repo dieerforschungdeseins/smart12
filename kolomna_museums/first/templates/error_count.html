@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка с количеством</title>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    <h3>Не хватает мест в программах</h3>
+    {% for i in programms %}
+    <h4>{{ i }}</h4>
+    {% endfor %}
+    <h3>На остальные была создана запись</h3>
+    <input type="submit" value="Перейти обратно к корзине">
+</form>
+</body>
+</html>
+
+<script>
+    body{
+            font-family: "Times New Roman";
+            font-size: 15px;
+            text-align: center;
+        }
+
+    .book-button {
+            position: absolute;
+            top: 0;
+            right: -120px;
+            padding: 8px 16px;
+            background-color: #8eaa95;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+</script>

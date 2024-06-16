@@ -232,7 +232,7 @@ def basket_page(request):
     print(programms)
     for i in programms:
         change_time(i)
-        if i.day_start - now_day <= 7:
+        if i.day_start - now_day <= 6:
             lst[list(lst.keys())[i.day_start - now_day]].append([i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult])
 
     for i in lst:
@@ -356,9 +356,18 @@ def main_admins_page(request):
 
     for i in programms:
         change_time(i)
-        if i.day_start - now_day <= 7:
+        rgs = Registr.objects.filter(programm_id=i.id)
+        adults = 0
+        children = 0
+        invalid = 0
+        for j in list(rgs):
+            adults += int(j.adult_count)
+            children += int(j.children_count)
+            invalid += int(j.invalid_count)
+
+        if i.day_start - now_day <= 6:
             lst[list(lst.keys())[i.day_start - now_day]].append(
-                [i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult])
+                [i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult, adults, children, invalid])
 
     for i in lst:
         lst[i] = sorted(lst[i], key=lambda x: x[1])
@@ -375,7 +384,10 @@ def main_admins_page(request):
                 "name": j[0],
                 "time": f"{j[1]}:{j[2]}",
                 "capacity": j[3],
-                "price": j[4]
+                "price": j[4],
+                "adult": j[5],
+                "children": j[6],
+                "invalid": j[7],
             })
         res.append(pr)
     context = {
@@ -383,13 +395,22 @@ def main_admins_page(request):
     }
 
     if request.method == "POST":
-        pass
+        rq = dict(request.POST)
+        print("timetable", request.POST)
+        if len(list(rq.keys())) > 1:
+            ids = list(rq.keys())[-1]
+            Programm.objects.filter(id=ids).delete()
+        return redirect('../admin/')
 
     return render(request, "main_admins.html", context)
 
 @login_required
 def museum_info_page(request):
-    return render(request, "museum_info.html")
+    places = Place.objects.filter()
+    context = {
+        "places": places,
+    }
+    return render(request, "museum_info.html", context)
 
 def timetable_client_page(request):
     user = User.objects.get(username=request.user)
@@ -411,7 +432,7 @@ def timetable_client_page(request):
               "декабря"]
     lst = dict()
     k = 0
-    for i in days[now_weekday - 1:-1]:
+    for i in days[now_weekday - 1:len(days)]:
         if now_month == 2:
             now_year = datetime.now().year
             if now_year % 4 == 0:
@@ -510,7 +531,10 @@ def timetable_client_page(request):
         "lst": res
     }
     if request.method == "POST":
-        print(request.POST)
+        rq = dict(request.POST)
+        ids = list(rq.keys())[-1]
+        Registr.objects.filter(programm_id=ids).delete()
+        print("timetable", request.POST)
         return redirect('../timetable_client/')
 
     return render(request, "timetable_client.html", context)
@@ -581,18 +605,50 @@ def one_reserv_page(request):
             for i in ids:
                 programs.append(list(Programm.objects.filter(id=i))[0])
             print("2", programs, list(req.keys())[-1])
-
+            redircts = []
             for i in programs:
-                record = Registr(
-                    programm_id=i,
-                    user=user,
-                    adult_count = request.POST.get("adults"),
-                    children_count = request.POST.get("children"),
-                    invalid_count = request.POST.get("invalid")
-                )
-                record.save()
+                adult = int(request.POST.get("adults"))
+                children = int(request.POST.get("children"))
+                invalid = int(request.POST.get("invalid"))
+                capacity = int(i.capacity)
+                rgs = Registr.objects.filter(programm_id=i)
+                adult_count = 0
+                children_count = 0
+                invalid_count = 0
+                for j in list(rgs):
+                    adult_count += int(j.adult_count)
+                    children_count += int(j.children_count)
+                    invalid_count += int(j.invalid_count)
+                if adult_count + children_count + invalid_count + adult + children + invalid > capacity:
+                    redircts.append(i)
+                else:
+                    record = Registr(
+                        programm_id=i,
+                        user=user,
+                        adult_count = request.POST.get("adults"),
+                        children_count = request.POST.get("children"),
+                        invalid_count = request.POST.get("invalid")
+                    )
+                    record.save()
+            if len(redircts) > 0:
+                ids = ""
+                for i in redircts: ids += f"{i.id} "
+                return redirect(f"../error_count/{ids}")
             return redirect('../timetable_client/')
     return render(request, "one_reserv.html", context)
+
+def error_count_page(request, ids):
+    programms = []
+    ids = list(map(int, ids.split()))
+    print(ids)
+    for j in ids:
+        programms.append(list(Programm.objects.filter(id=j))[0].name)
+    print(programms)
+    if request.method == "POST":
+        print(request.POST)
+        return redirect("/basket/")
+    return render(request, "error_count.html", context={"programms": programms})
+
 
 def basket_reserv_page(request):
     user = User.objects.get(username=request.user)
@@ -612,7 +668,7 @@ def basket_reserv_page(request):
     months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
     lst = dict()
     k = 0
-    for i in days[now_weekday - 1:-1]:
+    for i in days[now_weekday - 1:len(days)]:
         if now_month == 2:
             now_year = datetime.now().year
             if now_year % 4 == 0:
@@ -684,7 +740,7 @@ def basket_reserv_page(request):
 
     for i in programms:
         change_time(i)
-        if i.day_start - now_day <= 7:
+        if i.day_start - now_day <= 6:
             lst[list(lst.keys())[i.day_start - now_day]].append([i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult, i.id])
 
     for i in lst:
@@ -745,7 +801,237 @@ def museum_page(request, id):
 
 
 def all_museums_page(request):
-    return render(request, "all_museums.html")
+    programms = list(Programm.objects.filter())
+    now_weekday = datetime.now().isoweekday()
+    now_month = date.today().month
+    now_day = date.today().day
+    now_hour = datetime.now().hour + 3
+    now_minute = datetime.now().minute
+    TIMESWEEK = 168
+    days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+    months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября",
+              "декабря"]
+    lst = dict()
+    k = 0
+    print(days[now_weekday - 1:len(days):])
+    for i in days[now_weekday - 1:len(days):]:
+        print(i)
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+
+    for i in days[:now_weekday - 1]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+    print(programms)
+    for i in programms:
+        change_time(i)
+        if i.day_start - now_day <= 6:
+            lst[list(lst.keys())[i.day_start - now_day]].append(
+                [i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult])
+
+    for i in lst:
+        lst[i] = sorted(lst[i], key=lambda x: x[1])
+        lst[i] = sorted(lst[i], key=lambda x: x[2])
+
+    res = []
+    for i in lst:
+        pr = {
+            "day": i,
+            "value": []
+        }
+        for j in lst[i]:
+            pr["value"].append({
+                "name": j[0],
+                "time": f"{j[1]}:{j[2]}",
+                "capacity": j[3],
+                "price": j[4]
+            })
+        res.append(pr)
+    context = {
+        "lst": res
+    }
+
+    if request.method == "POST":
+        print("done")
+        print(request.POST)
+        return redirect('/one_revers')
+    print(lst)
+    return render(request, "all_museums.html", context)
+
+def admin_reserv_page(request):
+    programms = list(Programm.objects.filter())
+    now_weekday = datetime.now().isoweekday()
+    now_month = date.today().month
+    now_day = date.today().day
+    now_hour = datetime.now().hour + 3
+    now_minute = datetime.now().minute
+    TIMESWEEK = 168
+    days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+    months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+    lst = dict()
+    k = 0
+    for i in days[now_weekday - 1:len(days)]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month-1+1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month-1]}"] = []
+                else:
+                    if now_day+k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1+1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+
+    for i in days[:now_weekday - 1]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+
+    for i in programms:
+        change_time(i)
+        if i.day_start - now_day <= 6:
+            lst[list(lst.keys())[i.day_start - now_day]].append([i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult, i.id])
+
+    for i in lst:
+        lst[i] = sorted(lst[i], key=lambda x: x[1])
+        lst[i] = sorted(lst[i], key=lambda x: x[2])
+
+
+    res = []
+    for i in lst:
+        pr = {
+            "day": i,
+            "value": []
+        }
+        for j in lst[i]:
+            pr["value"].append({
+                "name": j[0],
+                "time": f"{j[1]}:{j[2]}",
+                "capacity": j[3],
+                "price": j[4],
+                "id": j[5]
+            })
+        res.append(pr)
+    context = {
+        "lst": res
+    }
+
+    return render(request, "admin_reserv.html", context)
 
 def upload_place_page(request):
     def init_image():

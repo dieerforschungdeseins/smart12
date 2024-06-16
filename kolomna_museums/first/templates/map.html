@@ -27,7 +27,20 @@
         <input type="text" name="user_text" placeholder="Введите текст" required><br>
         <button type="submit">Отправить</button>
     </form>
-<script src="https://api-maps.yandex.ru/2.1/?apikey=eaa6e591-581c-42c3-a201-00fb4697bfb0&lang=ru_RU" type="text/javascript"></script>
+
+<script src="https://api-maps.yandex.ru/2.1/?apikey=eaa6e591-581c-42c3-a201-00fb4697bfb0&lang=ru_RU" type="text/javascript">
+    function processRouteData(data) {
+  const routeCoordinates = data.routes[0].geometry;
+  const myMap = new ymaps.Map('map', {
+    center: [start_lat, start_lon],
+    zoom: 10
+  });
+  myMap.geoObjects.add(ymaps.route([[start_lat, start_lon], [end_lat, end_lon]], {
+    mapStateAutoApply: true,
+    routingMode: 'auto'
+  }));
+}
+</script>
 {{ user_text }}
 </body>
 </html>

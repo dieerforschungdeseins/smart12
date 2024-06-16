@@ -36,5 +36,7 @@ urlpatterns = [
     path('all_museums/', views.all_museums_page),
     path('upload_place/', views.upload_place_page),
     path('upload_programm/', views.upload_programm_page),
-    path('map/', views.map_page)
+    path('map/', views.map_page),
+    path('admin_reserv/', views.admin_reserv_page),
+    path('error_count/<str:ids>', views.error_count_page)
 ]

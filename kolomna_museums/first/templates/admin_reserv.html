@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Корзина</title>
+    <title>Бронирование</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
@@ -12,15 +12,14 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="../">Музеи Коломны</a>
-    <a class="navbar-brand" href="/basket">Ваша корзина</a>
-    <a class="navbar-brand" href=""><b>Расписание</b></a>
+    <a class="navbar-brand" href=""><b>Ваша корзина</b></a>
+    <a class="navbar-brand" href="/timetable_client">Расписание</a>
     <a class="navbar-brand" href="/contacts">Контакты</a>
     </nav>
 
-    <form method="POST">
+    <form method="POST" action="/one_reserv/">
         {% csrf_token %}
         <div class="timeline">
-
             {% for i in lst %}
             <div class="day">
                 <h3>{{ i.day }}</h3>
@@ -30,14 +29,17 @@
                     <p>Начало: {{ j.time }} </p>
                     <p>Продолжительность: {{ j.capacity }} часа</p>
                     <p>Цена: {{ j.price }}₽</p>
-                    <input class="book-button" type="submit" name="{{ j.id }}" value="Отменить">
+                    <label for="{{ j.id }}">Выбрать эту экскурсию</label>
+                    <input type="checkbox" id="{{ j.id }}" name="checkbox_name" value="{{ j.id }}">
+
                 </div>
                 {% endfor %}
             </div>
             {% endfor %}
         </div>
-    </form>
 
+        <button class="btn" type="submit" >Сформировать программу</button>
+    </form>
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -96,9 +98,9 @@
         .book-button {
             position: absolute;
             top: 0;
-            right: -30px;
+            right: -120px;
             padding: 8px 16px;
-            background-color: #965d5d;
+            background-color: #8eaa95;
             color: white;
             border: none;
             border-radius: 5px;

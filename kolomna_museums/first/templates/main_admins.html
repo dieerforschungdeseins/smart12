@@ -15,26 +15,29 @@
         <a class="navbar-brand" href="/museum_info">О музеях</a>
     </nav>
 
-    <div class="timeline">
-        {% for i in lst %}
-        <div class="day">
-            <h3>{{ i.day }}</h3>
-            {% for j in i.value %}
-            <div class="event">
-                <h4>{{ j.name }}</h4>
-                <p>Начало: {{ j.time }} </p>
-                <p>Продолжительность: {{ j.capacity }} часа</p>
-                <p>Цена: {{ j.price }}₽</p>
-                <form method="POST">
-                    <button class="book-button">Отменить</button>
-                </form>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="timeline">
+
+            {% for i in lst %}
+            <div class="day">
+                <h3>{{ i.day }}</h3>
+                {% for j in i.value %}
+                <div class="event">
+                    <h4>{{ j.name }}</h4>
+                    <p>Начало: {{ j.time }} </p>
+                    <p>Продолжительность: {{ j.capacity }} часа</p>
+                    <p>Цена: {{ j.price }}₽</p>
+                    <p>Количество взрослых: {{ j.adult }}</p>
+                    <p>Количество детей: {{ j.children }}</p>
+                    <p>Количество льготных: {{ j.invalid }}</p>
+                    <input class="book-button" type="submit" name="{{ j.id }}" value="Отменить">
+                </div>
+                {% endfor %}
             </div>
             {% endfor %}
         </div>
-        {% endfor %}
-        </div>
-
-    </div>
+    </form>
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

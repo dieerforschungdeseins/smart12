@@ -4,79 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Все музеи</title>
+    <title>Корзина</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/admin">Расписание</a>
-        <a class="navbar-brand" href=""><b>Оформление билета</b></a>
-        <a class="navbar-brand" href="/museum_info">О музеях</a>
+    <a class="navbar-brand" href="../">Музеи Коломны</a>
+    <a class="navbar-brand" href=""><b>Ваша корзина</b></a>
+    <a class="navbar-brand" href="/timetable_client">Расписание</a>
+    <a class="navbar-brand" href="/contacts">Контакты</a>
     </nav>
 
     <div class="timeline">
+        {% for i in lst %}
         <div class="day">
-            <h3>Понедельник, 17 июня 2024 г.</h3>
+            <h3>{{ i.day }}</h3>
+            {% for j in i.value %}
             <div class="event">
-                <h4>Исторический центр</h4>
-                <p>Время: 10:00 - 12:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
+                <h4>{{ j.name }}</h4>
+                <p>Начало: {{ j.time }} </p>
+                <p>Продолжительность: {{ j.capacity }} часа</p>
+                <p>Цена: {{ j.price }}₽</p>
             </div>
-            <div class="event">
-                <h4>Музей искусств</h4>
-                <p>Время: 13:00 - 15:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
-            <div class="event">
-                <h4>Прогулка по парку</h4>
-                <p>Время: 16:00 - 18:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
+            {% endfor %}
         </div>
-
-        <div class="day">
-            <h3>Вторник, 18 июня 2024 г.</h3>
-            <div class="event">
-                <h4>Природные достопримечательности</h4>
-                <p>Время: 09:00 - 12:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
-            <div class="event">
-                <h4>Водопады и каньоны</h4>
-                <p>Время: 13:00 - 15:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
-            <div class="event">
-                <h4>Экскурсия на лодке</h4>
-                <p>Время: 16:00 - 18:00</p>
-                <p>Цена: 300₽</p>
-                <form action="/one_reserv">
-                    <button class="book-button">Забронировать</button>
-                </form>
-            </div>
+        {% endfor %}
         </div>
 
     </div>
 
 
-    <form id="one_ticket" action="/basket_reserv">
+
+    <form id="one_ticket" action="/admin_reserv">
         <button class="btn" >Сформировать программу и забронировать все экскурсии единым билетом</button>
     </form>
 

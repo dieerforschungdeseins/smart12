@@ -11,6 +11,17 @@
         <a class="navbar-brand" href="/all_museums">Оформление билета</a>
         <a class="navbar-brand" href="/museum_info"><b>О музеях</b></a>
     </nav>
+    {% for place in places %}
+    <div class="container">
+        <div class="museum">
+            <h2 class="museum-title">{{ place.name }}</h2>
+            <p class="museum-description">{{ place.description }}</p>
+            <form action="/museum/{{ place.id }}" target="_blank">
+                <button class="btn">Перейти</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -18,3 +29,37 @@
 
 </body>
 </html>
+<style>
+        body{
+            font-family: "Times New Roman";
+            font-size: 15px;
+        }
+
+        h1 {
+          text-align: center;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+        }
+
+        li {
+          margin-bottom: 10px;
+          padding: 10px;
+        }
+
+        .container{
+          border-radius: 15px;
+          background-color: Snow;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          margin-top: 15px;
+          padding-top: 15px;
+          padding-bottom: 15px;
+          padding-right: 15px;
+          padding-left: 15px;
+        }
+        .logo{
+          text-align: center;
+        }
+    </style>
