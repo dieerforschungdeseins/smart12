@@ -11,12 +11,14 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="../">Музеи Коломны</a>
-    <a class="navbar-brand" href=""><b>Ваша корзина</b></a>
-    <a class="navbar-brand" href="/timetable_client">Расписание</a>
-    <a class="navbar-brand" href="/contacts">Контакты</a>
-    </nav>
+        <a class="navbar-brand" href="/admin">Расписание</a>
+        <a class="navbar-brand" href=""><b>Оформление билета</b></a>
+        <a class="navbar-brand" href="/museum_info">О музеях</a>
+        <a class="navbar-brand" href="/upload_place">Создать новое место</a>
+        <a class="navbar-brand" href="/upload_programm">Создать новое мероприятие</a>
+        <a class="navbar-brand" href="/plot">Диаграмма</a>
 
+    </nav>
     <div class="timeline">
         {% for i in lst %}
         <div class="day">
@@ -27,6 +29,9 @@
                 <p>Начало: {{ j.time }} </p>
                 <p>Продолжительность: {{ j.capacity }} часа</p>
                 <p>Цена: {{ j.price }}₽</p>
+                <form action="/registr/{{ j.id }}" target="_blank">
+                <button class="btn">Информация</button>
+            </form>
             </div>
             {% endfor %}
         </div>

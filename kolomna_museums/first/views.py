@@ -1,6 +1,11 @@
 from datetime import datetime
 from datetime import date
 
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+from django.http import HttpResponse
+
 from django.shortcuts import render
 
 from django.contrib.auth.decorators import login_required
@@ -23,8 +28,12 @@ def registration(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            user = User.objects.all().last()
+            info = list(UserInfo.objects.filter(user=user))[0]
+            if len(info) > 0:
+                return redirect("../error_account")
             user_info = UserInfo(
-                user = User.objects.all().last(),
+                user = user,
                 gmail = request.POST.get("gmail"),
                 telephone = request.POST.get("telephone"),
             )
@@ -37,7 +46,20 @@ def registration(request):
 
     return render(request, 'registration/sign_up.html', {'form': form, 'error': error})
 
-# def login
+def error_account_page(request):
+    return render(request, "error_account.html")
+
+def main(request):
+    print("..")
+    return redirect('../../../../')
+
+def account_page(request):
+    user = User.objects.get(username=request.user)
+    user_info = list(UserInfo.objects.filter(user=user))[0]
+    context = dict()
+    context["info"] = user_info
+    return render(request, "account.html",  context)
+
 
 def map_page(request):
     if request.method == 'POST':
@@ -404,6 +426,164 @@ def main_admins_page(request):
 
     return render(request, "main_admins.html", context)
 
+def plot_page(request):
+    import matplotlib.pyplot as plt
+
+    # Предположим, что у вас есть данные экскурсий в формате (день_недели, начало_час, конец_час)
+
+    excursions = []
+
+    programms = list(Programm.objects.filter())
+    now_weekday = datetime.now().isoweekday()
+    now_month = date.today().month
+    now_day = date.today().day
+    now_hour = datetime.now().hour + 3
+    now_minute = datetime.now().minute
+    TIMESWEEK = 168
+    days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+    months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября",
+              "декабря"]
+    lst = dict()
+    k = 0
+    for i in days[now_weekday - 1:len(days)]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+
+    for i in days[:now_weekday - 1]:
+        if now_month == 2:
+            now_year = datetime.now().year
+            if now_year % 4 == 0:
+                if now_year % 100 == 0 and now_year % 400 == 0:
+                    if now_day + k > 29:
+                        lst[f"{i}, {now_day + k - 29} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+                else:
+                    if now_day + k > 28:
+                        lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                    else:
+                        lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+            else:
+                if now_day + k > 28:
+                    lst[f"{i}, {now_day + k - 28} {months[now_month - 1 + 1]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        if now_month == 1 or now_month == 3 or now_month == 5 or now_month == 7 or now_month == 8 or now_month == 10 or now_month == 12:
+            if now_day + k > 31:
+                if now_month == 12:
+                    lst[f"{i}, {now_day + k - 31} {months[0]}"] = []
+                else:
+                    lst[f"{i}, {now_day + k - 31} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+
+        if now_month == 4 or now_month == 6 or now_month == 9 or now_month == 11:
+            if now_day + k > 30:
+                lst[f"{i}, {now_day + k - 30} {months[now_month - 1 + 1]}"] = []
+            else:
+                lst[f"{i}, {now_day + k} {months[now_month - 1]}"] = []
+        k += 1
+    colors = ["red", "orange", "yellow", "blue", "green", "lightblue", "black", "purple"]
+    for i in programms:
+        if i.day_start - now_day <= 6:
+            lst[list(lst.keys())[i.day_start - now_day]].append(
+                [int(i.hour_start), int(i.hour_start) + int(i.length), random.choice(colors), i.id])
+    print("LST: ", lst)
+    for i in lst:
+        if len(lst[i]) > 0:
+            for j in lst[i]:
+                excursions.append((str(i), j[0], j[1], j[3], j[2]))
+    print(excursions)
+    fig, ax = plt.subplots()
+    days = list(lst.keys())
+    # Устанавливаем интервалы для дней недели и времени
+    times = [[[] for i in range(0, 24)] for i in range(len(days))]
+    for i in excursions:
+        print(i)
+        for j in range(i[1], i[2]):
+            print(j, days.index(i[0]))
+            times[days.index(i[0])][j].append([i[3], i[4]])
+    for i in times:
+        print(*i)
+
+    # Создаем график
+    def exc_name_ind(name):
+        for i in range(len(excursions)):
+            if excursions[i][3] == name:
+                return i
+
+    # Отображаем данные экскурсий на диаграмме Ганта
+    for i in range(len(times)):
+        for j in range(len(times[i])):
+            idx = len(times[i][j])
+            if idx != 0:
+                idx = 1 / idx
+                if idx == 1:
+                    indexes = [0]
+                else:
+                    indexes = [0 for i in range(len(times[i][j]))]
+
+                    print(indexes, end=" ")
+                    key = 1
+                    for q in range(len(times[i][j]) // 2 - 1, -1, -1):
+                        indexes[q] -= key * (0.15)
+                        key += 1
+                    key = 1
+                    for q in range(len(times[i][j]) // 2, len(times[i][j])):
+                        indexes[q] += key * (0.15)
+                        key += 1
+                print(indexes, len(times[i][j]))
+                for r in range(len(times[i][j])):
+                    index_exc = exc_name_ind(times[i][j][r][0])
+                    if len(times[i][j][r]) > 0 and excursions[index_exc][1] == j:
+                        ax.barh(i + indexes[r], excursions[index_exc][2] - excursions[index_exc][1], left=j,
+                                height=0.15, align='center', color=times[i][j][r][1])
+
+    # Добавляем клеточную сетку
+    ax.grid(True)
+
+    # Настройка осей и меток
+    ax.set_yticks(range(len(days)))
+    ax.set_yticklabels(days)  # Изменяем порядок дней недели на обратный
+    ax.set_xticks(list(range(0, 24)))
+    ax.set_xlabel('Время')
+    ax.set_ylabel('День недели')
+    ax.set_title('Диаграмма Ганта для экскурсий')
+    plt.savefig('static/dg.png', format='png')
+    plt.savefig('static/dg.png', format='png')
+    return render(request, "plot.html")
+
 @login_required
 def museum_info_page(request):
     places = Place.objects.filter()
@@ -627,7 +807,8 @@ def one_reserv_page(request):
                         user=user,
                         adult_count = request.POST.get("adults"),
                         children_count = request.POST.get("children"),
-                        invalid_count = request.POST.get("invalid")
+                        invalid_count = request.POST.get("invalid"),
+                        status="None"
                     )
                     record.save()
             if len(redircts) > 0:
@@ -636,6 +817,31 @@ def one_reserv_page(request):
                 return redirect(f"../error_count/{ids}")
             return redirect('../timetable_client/')
     return render(request, "one_reserv.html", context)
+
+def registr_page(request, id):
+    programm = list(Programm.objects.filter(id=id))[0]
+    context = dict()
+    context["programm"] = programm
+    rgss = list(Registr.objects.filter(programm_id=programm))
+    rgs = list()
+    for i in rgss:
+        inf = list(UserInfo.objects.filter(user=i.user))[0]
+        dct = {
+            "pr": i,
+            "us": inf
+        }
+        rgs.append(dct)
+    context["rgs"] = rgs
+    if request.method == "POST":
+        print(request.POST)
+        req = dict(request.POST)
+        ids = int(list(req.keys())[-1])
+        rg = list(Registr.objects.filter(id=ids))[0]
+        rg.status = "Done"
+        rg.save()
+
+    return render(request, "registr.html", context)
+
 
 def error_count_page(request, ids):
     programms = []
@@ -889,7 +1095,7 @@ def all_museums_page(request):
         change_time(i)
         if i.day_start - now_day <= 6:
             lst[list(lst.keys())[i.day_start - now_day]].append(
-                [i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult])
+                [i.name, str(i.hour_start).zfill(2), str(i.minute_start).zfill(2), i.length, i.price_adult, i.id])
 
     for i in lst:
         lst[i] = sorted(lst[i], key=lambda x: x[1])
@@ -906,7 +1112,8 @@ def all_museums_page(request):
                 "name": j[0],
                 "time": f"{j[1]}:{j[2]}",
                 "capacity": j[3],
-                "price": j[4]
+                "price": j[4],
+                "id": j[5]
             })
         res.append(pr)
     context = {

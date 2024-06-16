@@ -44,6 +44,7 @@ class Registr(models.Model):
     adult_count = models.IntegerField()
     children_count = models.IntegerField()
     invalid_count = models.IntegerField()
+    status = models.CharField(max_length=100, default="None", null=True)
 
 class Favorite(models.Model):
     place = models.ForeignKey(

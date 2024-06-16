@@ -35,8 +35,12 @@ urlpatterns = [
     path('museum/<int:id>', views.museum_page),
     path('all_museums/', views.all_museums_page),
     path('upload_place/', views.upload_place_page),
+    path('plot/', views.plot_page, name='plot'),
     path('upload_programm/', views.upload_programm_page),
     path('map/', views.map_page),
     path('admin_reserv/', views.admin_reserv_page),
-    path('error_count/<str:ids>', views.error_count_page)
+    path('error_count/<str:ids>', views.error_count_page),
+    path('error_account', views.error_account_page),
+    path('accounts/profile/', views.account_page),
+    path('registr/<int:id>', views.registr_page)
 ]

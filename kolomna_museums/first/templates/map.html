@@ -4,8 +4,63 @@
     <meta charset="UTF-8">
     <title>Интеграция Яндекс.Карт</title>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=eaa6e591-581c-42c3-a201-00fb4697bfb0&lang=ru_RU" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 </head>
+<style>
+        body{
+            font-family: "Times New Roman";
+            font-size: 15px;
+        }
+
+        h1 {
+          text-align: center;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+        }
+
+        li {
+          margin-bottom: 10px;
+          padding: 10px;
+        }
+
+        .container{
+          border-radius: 15px;
+          background-color: Snow;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          margin-top: 15px;
+          padding-top: 15px;
+          padding-bottom: 15px;
+          padding-right: 15px;
+          padding-left: 15px;
+        }
+        .logo{
+          text-align: center;
+        }
+    </style>
+
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="../">Музеи Коломны</a>
+        <a class="navbar-brand" href="/basket">Ваша корзина</a>
+        <a class="navbar-brand" href="/timetable_client">Расписание</a>
+        <a class="navbar-brand" href=""><b>Карта</b></a>
+        <a class="navbar-brand" href="/contacts">Контакты</a>
+        <div class="registration-container">
+                {% if user.is_authenticated %}
+                <form action="/logout/" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input class="button-exit" type="submit" value="Выйти">
+                </form>
+                {% else %}
+                    <a class="other-a" href="/login">Войти</a>
+                {% endif %}
+        </div>
+    </nav>
     <div id="map" style="width: 100%; height: 400px;"></div>
     <script>
         ymaps.ready(function() {

@@ -122,68 +122,21 @@
                   width: 60%;
                 }
 
+
             </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/admin">Расписание</a>
         <a class="navbar-brand" href="/all_museums">Оформление билета</a>
         <a class="navbar-brand" href="/museum_info">О музеях</a>
-        <a class="navbar-brand" href=""><b>Создать новое место</b></a>
+        <a class="navbar-brand" href="/upload_place">Создать новое место</a>
         <a class="navbar-brand" href="/upload_programm">Создать новое мероприятие</a>
-        <a class="navbar-brand" href="/plot">Диаграмма</a>
+        <a class="navbar-brand" href=""><b>Диаграмма</b></a>
 
     </nav>
-    <div class="window_info">
-        <h2 class="title_main">Загрузить место</h2>
-        <div class="container">
-            <form method="post">
-                {% csrf_token %}
-                <select name="private_hidden" hidden><option value="0" id="private_hidden_id">I hate privates!</option></select>
+                <img src="{% static '/dg.png' %}" alt="Диаграмма">
 
-                <div class="title">Название музея/кафе/фестиваля/ярмарки</div>
-                <input class="text_field" type="text" name="name" placeholder="обязательно" required /><br />
-                <div class="space"></div>
-
-                <div class="title">Адрес</div>
-                <input class="text_field" type="text" name="place" placeholder="обязательно" required /><br />
-                <div class="space"></div>
-
-                <div class="title">Фотография места</div>
-                <input class="upload" type="file" id="image_custom" name="image_custom" accept="image/png, image/jpeg" /><br />
-                <div class="space"></div>
-
-                <div class="title">Описание</div>
-                <input class="text_field" type="text" id="description" name="description" placeholder="обязательно" required/><br />
-                <div class="space"></div>
-
-                <button class="upload_button" type="submit">Загрузить</button>
-            </form>
-            <div>
-                {% if success == 1 %}'
-                    <h4>Место было успешно загружено!</h4>
-                {% endif %}
-            </div>
-        </div>
-    </div>
 </body>
 </html>
 
-<script>
-    function choose_place_preview_update(){
-        global_places_counter = document.getElementsByClassName("place_element").length;
-
-        if(global_page_two){
-            image_content.innerHTML = '<input type="number" name="choose_image_input" value="1" min="1" max=' + global_places_counter + '>';
-        }
-    }
-
-
-    function custom_preview() {
-        global_page_two = false;
-
-        image_content.innerHTML = '<input type="file" id="image_custom" name="custom_image_file" accept="image/png, image/jpeg" required /> <br />';
-        choose_place_preview_update()
-    }
-
-</script>

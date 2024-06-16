@@ -15,6 +15,18 @@
     <a class="navbar-brand" href="/basket">Ваша корзина</a>
     <a class="navbar-brand" href=""><b>Расписание</b></a>
     <a class="navbar-brand" href="/contacts">Контакты</a>
+        <a class="navbar-brand" href="/map">Карта</a>
+        <div class="registration-container">
+                {% if user.is_authenticated %}
+                <form action="/logout/" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input class="button-exit" type="submit" value="Выйти">
+                </form>
+                {% else %}
+                    <a class="other-a" href="/login">Войти</a>
+                {% endif %}
+        </div>
     </nav>
 
     <form method="POST">

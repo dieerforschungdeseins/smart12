@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Ошибка с количеством</title>
+    <title>Аккаунт</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -11,14 +11,12 @@
 
 </head>
 <body>
-<form method="post">
+<form method="post" action="../../">
     {% csrf_token %}
-    <h3>Не хватает мест в программах</h3>
-    {% for i in programms %}
-    <h4>{{ i }}</h4>
-    {% endfor %}
-    <h3>На остальные была создана запись</h3>
-    <input type="submit" value="Перейти обратно к корзине">
+    Имя: {{ info.user }} <br>
+    Почта: {{ info.gmail }} <br>
+    Телефон: {{ info.telephone }} <br>
+    <input type="submit" value="Перейти обратно главной странице">
 </form>
 </body>
 </html>

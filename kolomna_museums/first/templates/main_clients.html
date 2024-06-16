@@ -13,16 +13,19 @@
         <a class="navbar-brand" href=""><b>Музеи Коломны</b></a>
         <a class="navbar-brand" href="/basket">Ваша корзина</a>
         <a class="navbar-brand" href="/timetable_client">Расписание</a>
+        <a class="navbar-brand" href="/map">Карта</a>
         <a class="navbar-brand" href="/contacts">Контакты</a>
-        {% if user.is_authenticated %}
-        <form class="a_main" action="../" method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input class="a_main_trans" type="submit" value="Выйти">
-        </form>
-        {% else %}
-            <a class="a_main" href="/login">Войти</a>
-        {% endif %}
+        <div class="registration-container">
+                {% if user.is_authenticated %}
+                <form action="/logout/" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input class="button-exit" type="submit" value="Выйти">
+                </form>
+                {% else %}
+                    <a class="other-a" href="/login">Войти</a>
+                {% endif %}
+        </div>
     </nav>
     {% for place in places %}
     <div class="container">
